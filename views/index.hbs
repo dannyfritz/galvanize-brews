@@ -1,0 +1,17 @@
+<p>
+    Check out our:
+    <ul>
+        <li><a href="breweries">Breweries</a></li>
+        <li><a href="beers">Beers</a></li>
+        {{#if breweries}}
+            <li>
+                Or the beers from:
+                <ul>
+                    {{#each breweries}}
+                        <li><a href="breweries/{{id}}/beers">{{name}}</a></li>
+                    {{/each}}
+                </ul>
+            </li>
+        {{/if}}
+    </ul>
+</p>

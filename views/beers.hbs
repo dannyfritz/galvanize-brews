@@ -1,0 +1,11 @@
+{{#if beers}}
+    <ul>
+        {{#each beers}}
+            <li><a href="/beers/{{id}}">{{name}}, {{abv}}% ABV</a></li>
+        {{/each}}
+    </ul>
+{{else if beer}}
+    <p>{{name}}, {{abv}}% ABV</p>
+{{else}}
+    <p>No beers!</p>
+{{/if}}
