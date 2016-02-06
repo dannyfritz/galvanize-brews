@@ -1,11 +1,18 @@
 {{#if beers}}
-    <ul>
+    <table>
+        <tr>
+            <th>Brewery</th>
+            <th>Beer</th>
+            <th>ABV</th>
+        </tr>
         {{#each beers}}
-            <li><a href="/beers/{{id}}">{{name}}, {{abv}}% ABV</a></li>
+            <tr>
+                <td class="brewery">{{brewery_name}}</td>
+                <td>{{beer_name}}</td>
+                <td>{{abv}}</td>
+            </tr>
         {{/each}}
-    </ul>
-{{else if beer}}
-    <p>{{name}}, {{abv}}% ABV</p>
+    </table>
 {{else}}
     <p>No beers!</p>
 {{/if}}

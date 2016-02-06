@@ -1,11 +1,23 @@
+var databaseConnection = require("knex")(require("./knexfile")[process.env.NODE_ENV]);
+
 module.exports = {
-    getBeer: function(id){
-        // Get beer from database
+    getBreweries: function(){
+        return databaseConnection("brewery").select();
     },
     getBrewery: function(id){
-        // Get brewery from database
+        return databaseConnection("brewery")
+        .first()
+        .where("id", id);
     },
-    getBeersFromBrewery: function(brewery){
-        // Get beers from database given brewery
+    getBeers: function(){
+        return databaseConnection("beer")
+        .select("beer.name AS beer_name", "brewery.name AS brewery_name", "*")
+        .innerJoin("brewery", "brewery_id", "brewery.id");
+    },
+    getBeersByBrewery: function(brewery_id){
+        return databaseConnection("beer")
+        .select("beer.name AS beer_name", "brewery.name AS brewery_name", "*")
+        .innerJoin("brewery", "brewery_id", "brewery.id")
+        .where("brewery_id", brewery_id);
     }
 };
