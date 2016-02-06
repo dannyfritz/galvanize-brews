@@ -1,11 +1,10 @@
+<h2>Breweries</h2>
 {{#if breweries}}
     <ul>
         {{#each breweries}}
-            <li><a href="/breweries/{{id}}">{{name}}, {{city}} {{state}}</a></li>
+            <li><a href="/breweries/{{id}}/beers">{{name}}</a>, {{city}} {{state}}</li>
         {{/each}}
     </ul>
-{{else if brewery}}
-    <p>{{name}}, {{city}} {{state}}</p>
 {{else}}
     <p>No breweries!</p>
 {{/if}}

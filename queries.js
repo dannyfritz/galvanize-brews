@@ -1,11 +1,18 @@
+
+
 module.exports = {
-    getBeer: function(id){
-        // Get beer from database
+    getBreweries: function(){
+        // Get all breweries
     },
     getBrewery: function(id){
-        // Get brewery from database
+        // Get one brewery that matches the id
     },
-    getBeersFromBrewery: function(brewery){
-        // Get beers from database given brewery
+    getBeers: function(){
+        // Get beers and brewery data
+        // Alias the beer name to beer_name and the brewery name to brewery_name
+    },
+    getBeersByBrewery: function(brewery_id){
+        // Get beers and brewery data for a single brewery
+        // Alias the beer name to beer_name and the brewery name to brewery_name
     }
 };

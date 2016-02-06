@@ -1,8 +1,99 @@
+/* General Styles */
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+    color: #333;
 }
 
-a {
-  color: #00B7FF;
+/* Header Styles */
+header {
+    background-color: #333;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+h1 {
+    -webkit-margin-after: 0;
+    -webkit-margin-before: 0;
+}
+h1 a:link, h1 a:visited {
+    display: inline-block;
+    margin: 0;
+    padding: 1rem;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Body Styles */
+main {
+    max-width: 500px;
+    height: 100vh;
+    padding: 1rem;
+    padding-top: 69px;
+    box-sizing: border-box;
+}
+nav ul {
+    -webkit-padding-start: 0;
+}
+nav li {
+    display: block;
+    width: 100%;
+    position: relative;
+    background-color: #ccc;
+    transition: background-color 0.3s;
+    text-align: center;
+}
+nav li:not(:last-child) {
+    margin-bottom: 1rem;
+}
+nav li:hover {
+    background-color: #999;
+}
+nav li a {
+    display: inline-block;
+    padding: 1rem;
+    text-decoration: none;
+    color: #333;
+    height: 100%;
+    width: 100%;
+    font-weight: 700;
+}
+
+/* Table Styles */
+table {
+    border-collapse: collapse;
+}
+th {
+    text-align: left;
+    font-style: italic;
+    font-weight: 400;
+}
+td, th {
+    padding: 1rem;
+}
+tr:nth-child(even) {
+    background-color: #ddd;
+}
+tr .brewery {
+    display: inline-block;
+    font-weight: 700;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: #fff;
+    box-sizing: border-box;
+    padding: 1rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+footer small {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1rem;
 }
