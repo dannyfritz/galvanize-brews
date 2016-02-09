@@ -1,19 +1,38 @@
 const axios = require("axios")
 const cheerio = require("cheerio")
+const logSymbols = require('log-symbols');
 const _ = require("lodash")
 const config = require("./config.json")
 const data = require("./data.json")
 
 const getHtmlFromResponse = (response) => response.data
+
 const getHtml = (url) =>
   axios.get(url)
     .then(getHtmlFromResponse)
+
 const log = (value) => {
   console.log(value)
   return value
 }
 
-const reportFormatter = (name) => {
+const resultsReporter = (results) => {
+  results.forEach((result) => {
+    const name = result[0]
+    const rollup = resultRollup(result)
+    const symbol = rollup.failing ? logSymbols.error : logSymbols.success
+    console.log(`${symbol} ${name}, passing: ${rollup.passing}, failing: ${rollup.failing}`)
+  })
+}
+
+const resultRollup = (result) =>
+  _.tail(result).reduce((rollup, result) => {
+    rollup.passing += result[1]
+    rollup.failing += result[2]
+    return rollup
+  }, {passing: 0, failing: 0})
+
+const resultFormatter = (name) => {
   return (results) => {
     const passed = _.compact(results).length
     return [name, passed, results.length - passed]
@@ -23,11 +42,15 @@ const reportFormatter = (name) => {
 const testSubmission = (submission) =>
   Promise.all([
     Promise.resolve(submission.name),
-    testBeers(submission.url).then(reportFormatter("beers")),
-    testBreweries(submission.url).then(reportFormatter("breweries")),
-    testSkaBrews(submission.url).then(reportFormatter("skaBrews")),
-    testComradeBrews(submission.url).then(reportFormatter("comradeBrews"))
+    testBeers(submission.url).then(resultFormatter("beers")),
+    testBreweries(submission.url).then(resultFormatter("breweries")),
+    testSkaBrews(submission.url).then(resultFormatter("skaBrews")),
+    testComradeBrews(submission.url).then(resultFormatter("comradeBrews"))
   ])
+  .catch((reason) => {
+    console.log(`${logSymbols.error} Error when running test for ${submission.name}`)
+    console.error(reason)
+  })
 
 const testBeers = (url) =>
   getBeers(url)
@@ -43,6 +66,7 @@ const testBeers = (url) =>
       matches.unshift(brews.length === data.brews.length)
       return matches
     })
+
 const testBreweries = (url) =>
   getBreweries(url)
   .then((breweries) => {
@@ -57,24 +81,56 @@ const testBreweries = (url) =>
     matches.unshift(breweries.length === data.breweries.length)
     return matches
   })
-  .then(log)
-const testSkaBrews = (url) => Promise.resolve([])
-const testComradeBrews = (url) => Promise.resolve([])
+
+const testSkaBrews = (url) =>
+  getSkaBrews(url)
+  .then((brews) => {
+    const masterBrews = _.filter(_.clone(data.brews), {brewery: "Ska"})
+    const matches = brews.map((brew) => {
+      const match = _.find(masterBrews, (masterBrew) => brewsEqual(masterBrew, brew))
+      if (!!match) {
+        _.remove(masterBrews, match)
+      }
+      return !!match
+    })
+    matches.unshift(brews.length === _.filter(data.brews, {brewery: "Ska"}).length)
+    return matches
+  })
+
+const testComradeBrews = (url) =>
+  getComradeBrews(url)
+  .then((brews) => {
+    const masterBrews = _.filter(_.clone(data.brews), {brewery: "Comrade"})
+    const matches = brews.map((brew) => {
+      const match = _.find(masterBrews, (masterBrew) => brewsEqual(masterBrew, brew))
+      if (!!match) {
+        _.remove(masterBrews, match)
+      }
+      return !!match
+    })
+    matches.unshift(brews.length === _.filter(data.brews, {brewery: "Comrade"}).length)
+    return matches
+  })
+
+const parseBeerTable = (html) => {
+  const $ = cheerio.load(html)
+  const $beerRows = $("tr ~ tr")
+  return $beerRows.toArray().map((tr) => {
+    const $td = $(tr).find("td")
+    return parseBeerTds($td)
+  })
+}
+
+const parseBeerTds = ($tds) => ({
+  brewery: $tds.eq(0).text(),
+  name: $tds.eq(1).text(),
+  abv: $tds.eq(2).text()
+})
 
 const getBeers = (url) =>
   getHtml(`${url}beers`)
-  .then((html) => {
-      const $ = cheerio.load(html)
-      const $beerRows = $("tr ~ tr")
-      return $beerRows.toArray().map((tr) => {
-        const $td = $(tr).find("td")
-        return {
-          brewery: $td.eq(0).text(),
-          name: $td.eq(1).text(),
-          abv: $td.eq(2).text()
-        }
-      })
-  })
+  .then(parseBeerTable)
+
 const getBreweries = (url) =>
   getHtml(`${url}breweries`)
   .then((html) => {
@@ -83,13 +139,27 @@ const getBreweries = (url) =>
     return $breweryLis.toArray().map((li) => {
       return {
         name: $(li).find("a").text(),
-        location: $(li).text().replace(/^[^,]*,\s/, "")
+        location: $(li).text().replace(/^[^,]*,\s/, ""),
+        path: $(li).find("a").attr("href").replace(/^\//, "")
       }
     })
   })
 
-const getSkaBrews = (url) => {}
-const getComradeBrews = (url) => {}
+const getSkaBrews = (url) =>
+  getBreweries(url)
+  .then((breweries) => {
+    const brewery = _.find(breweries, {name: "Ska"})
+    return getHtml(`${url}${brewery.path}`)
+  })
+  .then(parseBeerTable)
+
+const getComradeBrews = (url) =>
+  getBreweries(url)
+  .then((breweries) => {
+    const brewery = _.find(breweries, {name: "Comrade"})
+    return getHtml(`${url}${brewery.path}`)
+  })
+  .then(parseBeerTable)
 
 const brewsEqual = (brew1, brew2) => {
   if (_.lowerCase(brew1.name) !== _.lowerCase(brew2.name)) {
@@ -103,6 +173,7 @@ const brewsEqual = (brew1, brew2) => {
   }
   return true
 }
+
 const breweriesEqual = (brewery1, brewery2) => {
   if (_.lowerCase(brewery1.name) !== _.lowerCase(brewery2.name)) {
     return false
@@ -114,10 +185,13 @@ const breweriesEqual = (brewery1, brewery2) => {
 }
 
 const runner = (config) => {
-  console.log(`Starting tests for ${config.project}`)
+  console.log(`${logSymbols.info} Starting tests for ${config.project}`)
   Promise.all(config.submissions.map(testSubmission))
-    .then(log)
-    .catch(log)
+    .then(resultsReporter)
+    .catch((reason) => {
+      console.log(`${logSymbols.error} Error`)
+      console.error(reason)
+    })
 }
 
 runner(config)
