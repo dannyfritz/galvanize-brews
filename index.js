@@ -65,12 +65,14 @@ const getBeers = (url) =>
   getHtml(`${url}beers`)
   .then((html) => {
       const $ = cheerio.load(html)
-      const columns = _.keys(_.first(data.brews))
       const $beerRows = $("tr ~ tr")
       return $beerRows.toArray().map((tr) => {
-        return _.zipObject(columns, $(tr).find("td").toArray().map((td) => {
-          return $(td).text()
-        }))
+        const $td = $(tr).find("td")
+        return {
+          brewery: $td.eq(0).text(),
+          name: $td.eq(1).text(),
+          abv: $td.eq(2).text()
+        }
       })
   })
 const getBreweries = (url) =>
