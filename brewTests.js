@@ -147,7 +147,6 @@ const testSubmission = (submission) =>
   .catch((reason) => {
     console.log(`${logSymbols.error} Error when running test for ${submission.name}`)
     console.error(reason)
-    throw reason
   })
 
 module.exports = {

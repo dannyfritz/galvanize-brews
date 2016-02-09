@@ -28,7 +28,6 @@ const runner = () => {
     .catch((reason) => {
       console.log(`${logSymbols.error} Error`)
       console.error(reason)
-      throw reason
     })
 }
 
