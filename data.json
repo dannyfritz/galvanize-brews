@@ -1,0 +1,34 @@
+{
+  "brews": [
+    {
+      "brewery": "Comrade",
+      "name": "Yellow Fever",
+      "abv": "5"
+    },
+    {
+      "brewery": "Comrade",
+      "name": "Redcon",
+      "abv": "5.7"
+    },
+    {
+      "brewery": "Ska",
+      "name": "True Blonde Ale",
+      "abv": "5"
+    },
+    {
+      "brewery": "Ska",
+      "name": "Modus Hoperandi IPA",
+      "abv": "6.8"
+    }
+  ],
+  "breweries": [
+    {
+      "name": "Comrade",
+      "location": "Denver, CO"
+    },
+    {
+      "name": "Ska",
+      "location": "Durango, CO"
+    }
+  ]
+}

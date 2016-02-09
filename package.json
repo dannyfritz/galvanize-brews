@@ -1,0 +1,27 @@
+{
+  "name": "galvanize-brews",
+  "version": "1.0.0",
+  "description": "Test galvanize-brews",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.9.1",
+    "chai": "^3.5.0",
+    "cheerio": "^0.20.0",
+    "lodash": "^4.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "test": "npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://dannyfritz@github.com/dannyfritz/galvanize-brews.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dannyfritz/galvanize-brews/issues"
+  },
+  "homepage": "https://github.com/dannyfritz/galvanize-brews#readme"
+}
