@@ -14,13 +14,20 @@ const log = (value) => {
   return value
 }
 
+const reportFormatter = (name) => {
+  return (results) => {
+    const passed = _.compact(results).length
+    return [name, passed, results.length - passed]
+  }
+}
+
 const testSubmission = (submission) =>
   Promise.all([
     Promise.resolve(submission.name),
-    testBeers(submission.url),
-    testBreweries(submission.url),
-    testSkaBrews(submission.url),
-    testComradeBrews(submission.url)
+    testBeers(submission.url).then(reportFormatter("beers")),
+    testBreweries(submission.url).then(reportFormatter("breweries")),
+    testSkaBrews(submission.url).then(reportFormatter("skaBrews")),
+    testComradeBrews(submission.url).then(reportFormatter("comradeBrews"))
   ])
 
 const testBeers = (url) =>
@@ -37,9 +44,9 @@ const testBeers = (url) =>
       })
       return matches
     })
-const testBreweries = (url) => {}
-const testSkaBrews = (url) => {}
-const testComradeBrews = (url) => {}
+const testBreweries = (url) => Promise.resolve([])
+const testSkaBrews = (url) => Promise.resolve([])
+const testComradeBrews = (url) => Promise.resolve([])
 
 const getBeers = (url) =>
   getHtml(`${url}beers`)
