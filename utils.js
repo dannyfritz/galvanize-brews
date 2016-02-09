@@ -1,5 +1,6 @@
 const axios = require("axios")
 const logSymbols = require('log-symbols');
+const _ = require("lodash")
 
 const getHtml = (url) =>
   axios.get(url)

@@ -1,5 +1,6 @@
 require('dotenv').config();
 const GitHubApi = require("github")
+const utils = require("./utils")
 
 const github = new GitHubApi({
   version: "3.0.0",
@@ -25,13 +26,11 @@ const getPullRequests = (user, repo) =>
 
 const getPullRequestUser = (pullRequest) => pullRequest.head.repo.owner.login
 const getPullRequestRepoUrl = (pullRequest) => pullRequest.head.repo.html_url
-const getDeployedUrl = (pullRequest) => {
-  return 'hi'
-}
+const getDeployedUrl = (pullRequest) =>
+  utils.getHtml(`https://raw.githubusercontent.com/dannyfritz/galvanize-brews/solution/.deployedurl`)
 
 module.exports = {
   getPullRequestUser,
-  getPullRequestRepoUrl,
   getDeployedUrl,
   getPullRequests
 }

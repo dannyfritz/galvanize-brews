@@ -2,6 +2,7 @@ const cheerio = require("cheerio")
 const logSymbols = require('log-symbols');
 const _ = require("lodash")
 const utils = require("./utils")
+const data = require("./data")
 
 const testBeers = (url) =>
   getBeers(url)
@@ -146,6 +147,7 @@ const testSubmission = (submission) =>
   .catch((reason) => {
     console.log(`${logSymbols.error} Error when running test for ${submission.name}`)
     console.error(reason)
+    throw reason
   })
 
 module.exports = {

@@ -6,15 +6,19 @@ const github = require("./github")
 const brew = require("./brewTests")
 const utils = require("./utils")
 
-const getSubmissions= () =>
+const getSubmissions = () =>
   github.getPullRequests(process.env.GITHUB_USER, process.env.GITHUB_REPO)
-    .then((pullRequests) => {
-      return pullRequests.map((pullrequest) => ({
-        name: github.getPullRequestUser(pullrequest),
-        url: github.getDeployedUrl(pullrequest)
-      }))
-    })
-    .then(utils.log)
+    .then((pullRequests) =>
+      Promise.all(
+        pullRequests.map((pullrequest) =>
+          github.getDeployedUrl(pullrequest)
+            .then((deployedUrl) => ({
+              name: github.getPullRequestUser(pullrequest),
+              url: deployedUrl.trim()
+            }))
+        )
+      )
+    )
 
 const runner = () => {
   console.log(`${logSymbols.info} Starting tests`)
@@ -24,6 +28,7 @@ const runner = () => {
     .catch((reason) => {
       console.log(`${logSymbols.error} Error`)
       console.error(reason)
+      throw reason
     })
 }
 
