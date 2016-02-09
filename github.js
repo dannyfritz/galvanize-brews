@@ -1,6 +1,7 @@
 require('dotenv').config();
 const GitHubApi = require("github")
 const utils = require("./utils")
+const DEPLOYEDURL_FILE = `.deployedurl`
 
 const github = new GitHubApi({
   version: "3.0.0",
@@ -26,8 +27,12 @@ const getPullRequests = (user, repo) =>
 
 const getPullRequestUser = (pullRequest) => pullRequest.head.repo.owner.login
 const getPullRequestRepoUrl = (pullRequest) => pullRequest.head.repo.html_url
-const getDeployedUrl = (pullRequest) =>
-  utils.getHtml(`https://raw.githubusercontent.com/dannyfritz/galvanize-brews/solution/.deployedurl`)
+const getDeployedUrl = (pullRequest) => {
+  const user = pullRequest.head.repo.owner.login
+  const repo = pullRequest.head.repo.name
+  const branch = pullRequest.head.ref
+  return utils.getHtml(`https://raw.githubusercontent.com/${user}/${repo}/${branch}/${DEPLOYEDURL_FILE}`)
+}
 
 module.exports = {
   getPullRequestUser,
