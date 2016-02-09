@@ -1,4 +1,3 @@
-const chai = require("chai")
 const axios = require("axios")
 const cheerio = require("cheerio")
 const _ = require("lodash")
@@ -34,7 +33,6 @@ const testBeers = (url) =>
   getBeers(url)
     .then((brews) => {
       const masterBrews = _.clone(data.brews)
-      console.log(brews.length === masterBrews.length)
       const matches = brews.map((brew) => {
         const match = _.find(masterBrews, (masterBrew) => brewsEqual(masterBrew, brew))
         if (!!match) {
@@ -42,9 +40,24 @@ const testBeers = (url) =>
         }
         return !!match
       })
+      matches.unshift(brews.length === data.brews.length)
       return matches
     })
-const testBreweries = (url) => Promise.resolve([])
+const testBreweries = (url) =>
+  getBreweries(url)
+  .then((breweries) => {
+    const masterBreweries = _.clone(data.breweries)
+    const matches = breweries.map((brewery) => {
+      const match = _.find(masterBreweries, (masterBrewery) => breweriesEqual(masterBrewery, brewery))
+      if (!!match) {
+        _.remove(masterBreweries, match)
+      }
+      return !!match
+    })
+    matches.unshift(breweries.length === data.breweries.length)
+    return matches
+  })
+  .then(log)
 const testSkaBrews = (url) => Promise.resolve([])
 const testComradeBrews = (url) => Promise.resolve([])
 
@@ -60,7 +73,19 @@ const getBeers = (url) =>
         }))
       })
   })
-const getBreweries = (url) => {}
+const getBreweries = (url) =>
+  getHtml(`${url}breweries`)
+  .then((html) => {
+    const $ = cheerio.load(html)
+    const $breweryLis = $("li")
+    return $breweryLis.toArray().map((li) => {
+      return {
+        name: $(li).find("a").text(),
+        location: $(li).text().replace(/^[^,]*,\s/, "")
+      }
+    })
+  })
+
 const getSkaBrews = (url) => {}
 const getComradeBrews = (url) => {}
 
@@ -72,6 +97,15 @@ const brewsEqual = (brew1, brew2) => {
     return false
   }
   else if (_.lowerCase(brew1.brewery) !== _.lowerCase(brew2.brewery)) {
+    return false
+  }
+  return true
+}
+const breweriesEqual = (brewery1, brewery2) => {
+  if (_.lowerCase(brewery1.name) !== _.lowerCase(brewery2.name)) {
+    return false
+  }
+  else if (_.lowerCase(brewery1.location) !== _.lowerCase(brewery2.location)) {
     return false
   }
   return true
