@@ -1,5 +1,6 @@
-
 # Created by https://www.gitignore.io/api/node
+
+.env
 
 ### Node ###
 # Logs
@@ -35,4 +36,3 @@ node_modules
 
 # Optional REPL history
 .node_repl_history
-

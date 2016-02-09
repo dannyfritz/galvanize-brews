@@ -1,13 +1,4 @@
 {
-  "project": "galvanize-brews",
-  "submissions": [
-    {
-      "name": "Kyle Coberly",
-      "url": "http://galvanize-brews.herokuapp.com/"
-    },
-    {
-      "name": "Danny Fritz",
-      "url": "http://galvanize-brews.herokuapp.com/"
-    }
-  ]
+  "name": "galvanize-brews",
+  "repo": "gSchool/galvanize-brews"
 }

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const axios = require("axios")
 const cheerio = require("cheerio")
 const logSymbols = require('log-symbols');
@@ -184,9 +185,18 @@ const breweriesEqual = (brewery1, brewery2) => {
   return true
 }
 
+const getOpenPullRequestsUrls = () => {
+  return [
+    {
+      name: "Kyle",
+      url: "http://galvanize-brews.herokuapp.com/"
+    }
+  ]
+}
+
 const runner = (config) => {
-  console.log(`${logSymbols.info} Starting tests for ${config.project}`)
-  Promise.all(config.submissions.map(testSubmission))
+  console.log(`${logSymbols.info} Starting tests for ${config.name}`)
+  Promise.all(getOpenPullRequestsUrls().map(testSubmission))
     .then(resultsReporter)
     .catch((reason) => {
       console.log(`${logSymbols.error} Error`)
