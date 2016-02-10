@@ -1,0 +1,7 @@
+.passing {
+  background-color: hsl(100, 100%, 80%);
+}
+
+.failing {
+  background-color: hsl(0, 100%, 80%);
+}

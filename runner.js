@@ -22,13 +22,14 @@ const getSubmissions = () =>
 
 const runner = () => {
   console.log(`${logSymbols.info} Starting tests`)
-  getSubmissions()
+  return getSubmissions()
     .then((submissions) => Promise.all(submissions.map(brew.testSubmission)))
     .then(utils.resultsReporter)
     .catch((reason) => {
       console.log(`${logSymbols.error} Error`)
       console.error(reason)
+      return reason
     })
 }
 
-runner()
+module.exports = runner

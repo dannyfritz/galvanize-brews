@@ -14,11 +14,13 @@ const log = (value) => {
 }
 
 const resultsReporter = (results) => {
-  results.forEach((result) => {
+  return results.map((result) => {
     const name = result[0]
     const rollup = resultRollup(result)
     const symbol = rollup.failing ? logSymbols.error : logSymbols.success
     console.log(`${symbol} ${name}, passing: ${rollup.passing}, failing: ${rollup.failing}`)
+    rollup.name = name
+    return rollup
   })
 }
 

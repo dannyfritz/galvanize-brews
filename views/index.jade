@@ -1,0 +1,22 @@
+html
+  head
+    title= user + "/" + repo
+    link(rel="stylesheet" href="main.css")
+  body
+    h1= user + "/" + repo
+  table
+    tr
+      th Name
+      th Passing
+      th Failing
+    each report in reports
+      if report.failing == 0
+        tr.passing
+          td= report.name
+          td= report.passing
+          td= report.failing
+      else
+        tr.failing
+          td= report.name
+          td= report.passing
+          td= report.failing

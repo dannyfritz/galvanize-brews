@@ -2,19 +2,19 @@
   "name": "galvanize-brews",
   "version": "1.0.0",
   "description": "Test galvanize-brews",
-  "main": "index.js",
   "dependencies": {
     "axios": "^0.9.1",
     "cheerio": "^0.20.0",
     "dotenv": "^2.0.0",
+    "express": "^4.13.4",
     "github": "^0.2.4",
+    "jade": "^1.11.0",
     "lodash": "^4.3.0",
     "log-symbols": "^1.0.2"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node index.js",
-    "test": "npm start"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
